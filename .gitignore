@@ -1,0 +1,28 @@
+# Logs & dependencies
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor & OS
+.vscode
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Documentation & temporary test scripts (as per instructions: bare code only in git)
+SPECIFICATION.txt
+ARCHITECTURE.txt
+CONVENTIONS.txt
+README.txt
+agents.md
+test-calculations.js
+
+# Root raw images
+/*.jpg
+/*.png
+/*.webp
