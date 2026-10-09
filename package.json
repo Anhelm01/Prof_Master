@@ -7,7 +7,11 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "test": "node test-calculations.js"
+    "server": "node server/src/index.js",
+    "server:dev": "node --watch server/src/index.js",
+    "test:client": "node test-calculations.js",
+    "test:server": "node server/test-api.js",
+    "test": "node test-calculations.js && node server/test-api.js"
   },
   "dependencies": {
     "react": "^19.1.0",

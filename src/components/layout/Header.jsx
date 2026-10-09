@@ -9,10 +9,14 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 40);
+    const handleScroll = () => {
+      const threshold = activeScreen === 'home' ? window.innerHeight * 2.0 : 40;
+      setScrolled(window.scrollY > threshold);
+    };
     window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [activeScreen]);
 
   useEffect(() => {
     const handleKey = (e) => {
@@ -40,6 +44,10 @@ export default function Header() {
   };
 
   const isLightPage = activeScreen !== 'home';
+
+  if (activeScreen === 'home' && !scrolled) {
+    return null;
+  }
 
   return (
     <>
@@ -118,7 +126,6 @@ export default function Header() {
         </div>
       </header>
 
-      {/* Backdrop for mobile navigation drawer */}
       {menuOpen && (
         <div
           className="header__backdrop"

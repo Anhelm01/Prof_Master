@@ -35,7 +35,7 @@ export default function RouteBuilder() {
     setActiveScreen
   } = useRoute();
 
-  const [activeTab, setActiveTab] = useState('sequence'); // 'sequence' | 'timeline'
+  const [activeTab, setActiveTab] = useState('sequence');
   const [editingNoteId, setEditingNoteId] = useState(null);
 
   const places = stats.routePlaces;
@@ -87,7 +87,7 @@ export default function RouteBuilder() {
   return (
     <section className="builder-page" id="route">
       <div className="builder-container">
-        {/* Верхняя информационная панель */}
+
         <div className="builder-header">
           <div>
             <div className="builder-header__tag">ИНТЕРАКТИВНЫЙ КОНСТРУКТОР</div>
@@ -115,7 +115,6 @@ export default function RouteBuilder() {
           </div>
         </div>
 
-        {/* Предупреждение о превышении допустимого лимита времени прямо в конструкторе */}
         {stats.isDurationExceeded && (
           <div className="builder-alert-bar" role="alert">
             <div className="builder-alert-bar__main">
@@ -135,7 +134,6 @@ export default function RouteBuilder() {
           </div>
         )}
 
-        {/* Переключатель вида (Последовательность / Таймлайн) */}
         <div className="builder-view-switcher">
           <div className="builder-tabs">
             <button
@@ -173,7 +171,6 @@ export default function RouteBuilder() {
           </div>
         </div>
 
-        {/* Режим 1: Последовательность шагов (Sequence) */}
         {activeTab === 'sequence' && (
           <div className="builder-sequence">
             {places.map((place, index) => {
@@ -185,13 +182,12 @@ export default function RouteBuilder() {
               return (
                 <div key={place.id} className="sequence-step-wrapper">
                   <div className="sequence-card">
-                    {/* Номер шага */}
+
                     <div className="sequence-step-num">
                       <span className="sequence-step-num__label">ШАГ</span>
                       <span className="sequence-step-num__digit">{index + 1}</span>
                     </div>
 
-                    {/* Медиа превью */}
                     <div className="sequence-media">
                       <img
                         src={place.imageUrl}
@@ -205,7 +201,6 @@ export default function RouteBuilder() {
                       <span className="sequence-media__cat">{formatCategory(place.category)}</span>
                     </div>
 
-                    {/* Описание места */}
                     <div className="sequence-content">
                       <div className="sequence-content__header">
                         <h3 className="sequence-title">{place.title}</h3>
@@ -223,7 +218,6 @@ export default function RouteBuilder() {
                         </span>
                       </div>
 
-                      {/* Путевая заметка */}
                       <div className="sequence-note-box">
                         {isEditing ? (
                           <div className="sequence-note-edit">
@@ -262,7 +256,6 @@ export default function RouteBuilder() {
                       </div>
                     </div>
 
-                    {/* Кнопки управления (вверх, вниз, удалить) */}
                     <div className="sequence-actions">
                       <button
                         className="sequence-action-btn"
@@ -290,7 +283,6 @@ export default function RouteBuilder() {
                     </div>
                   </div>
 
-                  {/* Соединитель с трансфером между точками */}
                   {!isLast && (
                     <div className="sequence-transfer-indicator">
                       <div className="sequence-transfer-line" />
@@ -307,7 +299,6 @@ export default function RouteBuilder() {
           </div>
         )}
 
-        {/* Режим 2: Интерактивный таймлайн дня (Timeline Schedule) */}
         {activeTab === 'timeline' && (
           <div className="builder-timeline">
             <div className="timeline-info-banner">
@@ -322,13 +313,12 @@ export default function RouteBuilder() {
                 const isLast = idx === timelineSchedule.length - 1;
                 return (
                   <div key={item.place.id} className="timeline-node">
-                    {/* Точка на шкале */}
+
                     <div className="timeline-marker">
                       <div className="timeline-marker__dot">{item.stepIndex}</div>
                       {!isLast && <div className="timeline-marker__line" />}
                     </div>
 
-                    {/* Контент визита */}
                     <div className="timeline-content">
                       <div className="timeline-time-badge">
                         <Clock size={13} />
@@ -358,7 +348,6 @@ export default function RouteBuilder() {
                         </div>
                       </div>
 
-                      {/* Блок трансфера */}
                       {!isLast && (
                         <div className="timeline-transfer-block">
                           <Car size={15} />

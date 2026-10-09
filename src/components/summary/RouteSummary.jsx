@@ -29,13 +29,11 @@ export default function RouteSummary() {
 
   const [copied, setCopied] = useState(false);
 
-  // Самый длительный объект в маршруте (для умной рекомендации при превышении)
   const longestPlace = useMemo(() => {
     if (!stats.routePlaces.length) return null;
     return [...stats.routePlaces].sort((a, b) => b.durationMinutes - a.durationMinutes)[0];
   }, [stats.routePlaces]);
 
-  // Копирование программы в буфер
   const handleCopyItinerary = () => {
     if (timelineSchedule.length === 0) return;
 
@@ -70,7 +68,7 @@ export default function RouteSummary() {
   return (
     <section className="summary-page" id="summary">
       <div className="summary-container">
-        {/* Шапка страницы */}
+
         <div className="summary-header">
           <div className="summary-header__tag">АНАЛИТИКА И КОНТРОЛЬ ЛИМИТОВ</div>
           <h1 className="summary-header__title">Сводка маршрута и аудит времени</h1>
@@ -79,7 +77,6 @@ export default function RouteSummary() {
           </p>
         </div>
 
-        {/* ПРЕВЫШЕНИЕ ЛИМИТА — ОБЯЗАТЕЛЬНЫЙ ЯРКИЙ АЛЕРТ */}
         {stats.isDurationExceeded ? (
           <div className="summary-alert summary-alert--danger" role="alert">
             <div className="summary-alert__icon-wrap">
@@ -130,7 +127,6 @@ export default function RouteSummary() {
           </div>
         ) : null}
 
-        {/* Превышение бюджета (если задано) */}
         {stats.isBudgetExceeded && (
           <div className="summary-alert summary-alert--warning">
             <div className="summary-alert__icon-wrap">
@@ -147,7 +143,6 @@ export default function RouteSummary() {
           </div>
         )}
 
-        {/* Карточки ключевых показателей */}
         <div className="summary-metrics-grid">
           <div className="metric-card">
             <div className="metric-card__header">
@@ -212,7 +207,6 @@ export default function RouteSummary() {
           </div>
         </div>
 
-        {/* Панель настройки дневных лимитов */}
         <div className="summary-settings-card">
           <div className="summary-settings__header">
             <Sliders size={20} className="summary-settings__icon" />
@@ -225,7 +219,7 @@ export default function RouteSummary() {
           </div>
 
           <div className="summary-settings__controls">
-            {/* Слайдер времени */}
+
             <div className="settings-field">
               <div className="settings-field__top">
                 <label htmlFor="limit-slider" className="settings-field__label">
@@ -255,7 +249,6 @@ export default function RouteSummary() {
                 <span>14ч</span>
               </div>
 
-              {/* Быстрые кнопки пресетов лимита */}
               <div className="settings-quick-btns">
                 {[240, 360, 480, 600].map((mins) => (
                   <button
@@ -269,7 +262,6 @@ export default function RouteSummary() {
               </div>
             </div>
 
-            {/* Бюджет */}
             <div className="settings-field">
               <div className="settings-field__top">
                 <label className="settings-field__label">
@@ -294,7 +286,6 @@ export default function RouteSummary() {
           </div>
         </div>
 
-        {/* Распечатка / Готовый маршрутный лист */}
         <div className="summary-print-sheet">
           <div className="summary-print-sheet__header">
             <div>
@@ -325,7 +316,6 @@ export default function RouteSummary() {
             </div>
           </div>
 
-          {/* Сводные показатели маршрутного листа для печати */}
           {stats.placesCount > 0 && (
             <div className="summary-print-meta">
               <div className="summary-print-meta-item">

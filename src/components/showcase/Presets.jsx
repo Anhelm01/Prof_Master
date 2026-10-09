@@ -2,9 +2,6 @@ import { ArrowRight } from 'lucide-react';
 import { useRoute } from '../../context/RouteContext.jsx';
 import './Presets.css';
 
-/**
- * Presets — Блок готовых маршрутов-пресетов для быстрого старта.
- */
 export default function Presets({ onSelectPreset }) {
   const { presets, applyPreset, setActiveScreen } = useRoute();
 

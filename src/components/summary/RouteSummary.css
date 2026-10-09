@@ -1,9 +1,3 @@
-/* =========================================================================
-   RouteSummary & Limits Audit Styles
-   Palette: Dark Moss Green, Apple Green, Flax, Golden Brown, Bistre, Cream
-   Alert: var(--color-alert-warn) #D9531E
-   ========================================================================= */
-
 .summary-page {
   min-height: 100vh;
   padding: 7rem 2rem 5rem;
@@ -15,7 +9,6 @@
   margin: 0 auto;
 }
 
-/* Header */
 .summary-header {
   text-align: center;
   max-width: 780px;
@@ -48,7 +41,6 @@
   color: var(--color-text-secondary);
 }
 
-/* ALERTS: HIGH VISIBILITY WARNING & SUCCESS */
 .summary-alert {
   display: flex;
   gap: 1.5rem;
@@ -207,7 +199,6 @@
   transform: translateY(-1px);
 }
 
-/* Metrics Grid */
 .summary-metrics-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
@@ -287,7 +278,6 @@
   background: var(--color-alert-warn) !important;
 }
 
-/* Settings card */
 .summary-settings-card {
   background: #ffffff;
   border-radius: var(--radius-lg);
@@ -395,7 +385,6 @@
   border-color: var(--color-moss) !important;
 }
 
-/* Print Sheet */
 .summary-print-sheet {
   background: #ffffff;
   border-radius: var(--radius-lg);
@@ -512,7 +501,6 @@
   color: var(--color-text-muted);
 }
 
-/* Print Summary Meta Box */
 .summary-print-meta {
   display: flex;
   flex-wrap: wrap;
@@ -541,7 +529,6 @@
   font-weight: 700;
 }
 
-/* Print Table Transfer Row */
 .print-row-transfer {
   background: rgba(237, 227, 131, 0.2);
 }
@@ -569,9 +556,6 @@
   margin-bottom: 1.5rem;
 }
 
-/* =========================================================================
-   PRINT MEDIA STYLES
-   ========================================================================= */
 @media print {
   body {
     background: #ffffff !important;
@@ -609,7 +593,6 @@
   }
 }
 
-/* Responsive */
 @media (max-width: 768px) {
   .summary-page {
     padding: 5.5rem 1rem 3rem;

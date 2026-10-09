@@ -1,0 +1,257 @@
+{
+  "info": {
+    "_postman_id": "7b8d8e52-a5e2-4df4-a4f5-7b56a4221129",
+    "name": "Waypoint Tourist Planner API (II этап)",
+    "description": "Коллекция запросов Postman для тестирования серверной части веб-приложения «Туристический планировщик». Включает аутентификацию (JWT), каталог объектов с фильтрами и поиском, CRUD маршрутов, перестановку шагов и серверную бизнес-логику расчетов лимитов.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5000/api", "type": "string" },
+    { "key": "authToken", "value": "", "type": "string" },
+    { "key": "createdRouteId", "value": "1", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "1. Служебные (Health)",
+      "item": [
+        {
+          "name": "GET Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/health", "host": ["{{baseUrl}}"], "path": ["health"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Аутентификация (Auth API)",
+      "item": [
+        {
+          "name": "POST Регистрация нового пользователя",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"test_traveler\",\n  \"email\": \"test_traveler@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/auth/register", "host": ["{{baseUrl}}"], "path": ["auth", "register"] }
+          }
+        },
+        {
+          "name": "POST Вход (Login) и сохранение токена",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.success && json.data.token) {",
+                  "    pm.collectionVariables.set('authToken', json.data.token);",
+                  "    pm.environment.set('authToken', json.data.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"login\": \"traveler\",\n  \"password\": \"user123\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] }
+          }
+        },
+        {
+          "name": "GET Текущий профиль (Защищенный маршрут)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{authToken}}" }],
+            "url": { "raw": "{{baseUrl}}/auth/me", "host": ["{{baseUrl}}"], "path": ["auth", "me"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Каталог объектов (Places API)",
+      "item": [
+        {
+          "name": "GET Все объекты каталога",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/places", "host": ["{{baseUrl}}"], "path": ["places"] }
+          }
+        },
+        {
+          "name": "GET Фильтрация по категории (nature)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/places?category=nature",
+              "host": ["{{baseUrl}}"],
+              "path": ["places"],
+              "query": [{ "key": "category", "value": "nature" }]
+            }
+          }
+        },
+        {
+          "name": "GET Поиск по названию/тегам",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/places?search=Эрмитаж",
+              "host": ["{{baseUrl}}"],
+              "path": ["places"],
+              "query": [{ "key": "search", "value": "Эрмитаж" }]
+            }
+          }
+        },
+        {
+          "name": "GET Сортировка по стоимости (возрастание)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/places?sort=cost_asc",
+              "host": ["{{baseUrl}}"],
+              "path": ["places"],
+              "query": [{ "key": "sort", "value": "cost_asc" }]
+            }
+          }
+        },
+        {
+          "name": "GET Детали объекта по ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/places/place-01", "host": ["{{baseUrl}}"], "path": ["places", "place-01"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Бизнес-логика и расчеты (Calculations)",
+      "item": [
+        {
+          "name": "POST Расчет маршрута в пределах нормы",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"place_ids\": [\"place-01\", \"place-03\"],\n  \"max_duration_minutes\": 480,\n  \"max_budget\": 3000\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/routes/calculate", "host": ["{{baseUrl}}"], "path": ["routes", "calculate"] }
+          }
+        },
+        {
+          "name": "POST Проверка превышения лимитов и рекомендация оптимизации",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"place_ids\": [\"place-01\", \"place-02\", \"place-04\", \"place-05\"],\n  \"max_duration_minutes\": 240,\n  \"max_budget\": 1000\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/routes/calculate", "host": ["{{baseUrl}}"], "path": ["routes", "calculate"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Управление маршрутами (Routes CRUD)",
+      "item": [
+        {
+          "name": "GET Список маршрутов пользователя",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{authToken}}" }],
+            "url": { "raw": "{{baseUrl}}/routes", "host": ["{{baseUrl}}"], "path": ["routes"] }
+          }
+        },
+        {
+          "name": "POST Создание маршрута с объектами",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.success && json.data.id) {",
+                  "    pm.collectionVariables.set('createdRouteId', String(json.data.id));",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Маршрут выходного дня\",\n  \"description\": \"Прогулка по рекам и музеям\",\n  \"max_duration_minutes\": 420,\n  \"max_budget\": 4000,\n  \"place_ids\": [\"place-01\", \"place-03\", \"place-06\"]\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/routes", "host": ["{{baseUrl}}"], "path": ["routes"] }
+          }
+        },
+        {
+          "name": "GET Просмотр созданного маршрута",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{authToken}}" }],
+            "url": { "raw": "{{baseUrl}}/routes/{{createdRouteId}}", "host": ["{{baseUrl}}"], "path": ["routes", "{{createdRouteId}}"] }
+          }
+        },
+        {
+          "name": "PUT Изменение порядка точек (Reorder)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"place_ids\": [\"place-06\", \"place-01\", \"place-03\"]\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/routes/{{createdRouteId}}/places/reorder", "host": ["{{baseUrl}}"], "path": ["routes", "{{createdRouteId}}", "places", "reorder"] }
+          }
+        },
+        {
+          "name": "PATCH Смена жизненного цикла (draft -> planned)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"planned\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/routes/{{createdRouteId}}/status", "host": ["{{baseUrl}}"], "path": ["routes", "{{createdRouteId}}", "status"] }
+          }
+        },
+        {
+          "name": "DELETE Удаление маршрута",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{authToken}}" }],
+            "url": { "raw": "{{baseUrl}}/routes/{{createdRouteId}}", "host": ["{{baseUrl}}"], "path": ["routes", "{{createdRouteId}}"] }
+          }
+        }
+      ]
+    }
+  ]
+}

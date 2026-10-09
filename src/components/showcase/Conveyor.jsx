@@ -47,13 +47,6 @@ const SLIDES = [
   },
 ];
 
-/**
- * Conveyor — Fullscreen immersive image showcase.
- * Вертикальный скролл управляет плавным crossfade + zoom + parallax
- * между тремя фуллскрин-изображениями.
- * Содержит кинематографичные надписи по пути скролла и индикатор слайдов.
- * Лишний нижний прогресс-бар удален.
- */
 export default function Conveyor() {
   const { setActiveScreen, openCatalogWithCategory } = useRoute();
   const sectionRef = useRef(null);
@@ -62,12 +55,10 @@ export default function Conveyor() {
   const currentProgress = useRef(0);
   const targetProgress = useRef(0);
 
-  // Smooth lerp animation loop for 60fps butter
   const animate = useCallback(() => {
     const lerp = 0.08;
     currentProgress.current += (targetProgress.current - currentProgress.current) * lerp;
 
-    // Snap when close enough
     if (Math.abs(currentProgress.current - targetProgress.current) < 0.0001) {
       currentProgress.current = targetProgress.current;
     }
@@ -83,7 +74,6 @@ export default function Conveyor() {
     };
   }, [animate]);
 
-  // Scroll handler — sets target, lerp does the rest
   useEffect(() => {
     const handleScroll = () => {
       const section = sectionRef.current;
@@ -102,7 +92,6 @@ export default function Conveyor() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Preload images
   useEffect(() => {
     SLIDES.forEach((s) => {
       const img = new Image();
@@ -112,13 +101,11 @@ export default function Conveyor() {
 
   const totalSlides = SLIDES.length;
 
-  // Compute per-slide visibility: each slide occupies 1/totalSlides of the progress range
   const getSlideStyle = (index) => {
     const segmentSize = 1 / totalSlides;
     const slideStart = index * segmentSize;
     const slideEnd = slideStart + segmentSize;
 
-    // Opacity: fade in during first 30% of segment, fade out during last 30%
     let opacity = 0;
     const fadeZone = segmentSize * 0.3;
 
@@ -132,17 +119,14 @@ export default function Conveyor() {
       }
     }
 
-    // First slide starts fully visible
     if (index === 0 && progress < fadeZone) {
       opacity = 1;
     }
 
-    // Last slide stays visible at end
     if (index === totalSlides - 1 && progress > slideEnd - fadeZone) {
       opacity = 1;
     }
 
-    // Ken Burns: slow zoom + slight vertical parallax
     const slideProgress = Math.max(0, Math.min(1, (progress - slideStart) / segmentSize));
     const scale = 1.0 + slideProgress * 0.12;
     const translateY = (slideProgress - 0.5) * -24;
@@ -154,13 +138,11 @@ export default function Conveyor() {
     };
   };
 
-  // Active slide index for counter
   const activeIndex = Math.min(
     Math.floor(progress * totalSlides),
     totalSlides - 1
   );
 
-  // Compute caption style along the scroll path without sudden flashes or vanishing on slide 3
   const getCaptionStyle = (index) => {
     let opacity = 0;
     let translateY = 20;
@@ -170,16 +152,16 @@ export default function Conveyor() {
         opacity = 0;
         translateY = 20;
       } else if (progress < 0.14) {
-        // Smooth ease in from 0.05 to 0.14
+
         const t = (progress - 0.05) / (0.14 - 0.05);
         opacity = t;
         translateY = 20 * (1 - t);
       } else if (progress <= 0.26) {
-        // Full visibility
+
         opacity = 1;
         translateY = 0;
       } else if (progress < 0.35) {
-        // Smooth ease out
+
         const t = (progress - 0.26) / (0.35 - 0.26);
         opacity = 1 - t;
         translateY = -20 * t;
@@ -207,7 +189,7 @@ export default function Conveyor() {
         translateY = -20;
       }
     } else if (index === 2) {
-      // Last slide: stays visible all the way to bottom of the conveyor
+
       if (progress < 0.65) {
         opacity = 0;
         translateY = 20;
@@ -248,7 +230,7 @@ export default function Conveyor() {
       id="conveyor"
     >
       <div className="cv-sticky">
-        {/* Fullscreen image layers */}
+
         {SLIDES.map((slide, i) => {
           const style = getSlideStyle(i);
           return (
@@ -268,23 +250,19 @@ export default function Conveyor() {
           );
         })}
 
-        {/* Soft gradient overlays for text readability */}
         <div className="cv-overlay cv-overlay--top" />
         <div className="cv-overlay cv-overlay--bottom" />
 
-        {/* Minimal branding — clean and clear */}
         <div className={`cv-hero ${progress > 0.05 ? 'cv-hero--fade' : ''}`}>
           <h1 className="cv-hero__title">WayPoint</h1>
           <p className="cv-hero__sub">Спланируй маршрут мечты</p>
         </div>
 
-        {/* Scroll hint */}
         <div className={`cv-scroll-hint ${progress > 0.03 ? 'cv-scroll-hint--hide' : ''}`}>
           <span className="cv-scroll-hint__text">Крутите вниз</span>
           <div className="cv-scroll-hint__line" />
         </div>
 
-        {/* Pure cinematic text along scroll path */}
         <div className="cv-captions-container">
           {SLIDES.map((slide, i) => {
             const capStyle = getCaptionStyle(i);
@@ -306,7 +284,6 @@ export default function Conveyor() {
           })}
         </div>
 
-        {/* Slide counter — bottom-right, ultra minimal */}
         <div className="cv-counter">
           <span className="cv-counter__current">{String(activeIndex + 1).padStart(2, '0')}</span>
           <span className="cv-counter__sep">/</span>

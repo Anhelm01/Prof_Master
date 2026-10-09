@@ -1,16 +1,8 @@
-/* =========================================================================
-   Conveyor — Fullscreen immersive image showcase
-   Zero clutter. Pure cinematic experience.
-   Palette: Dark Moss Green, Apple Green, Flax, Golden Brown, Bistre, Cream
-   ========================================================================= */
-
-/* ── Scroll container ── */
 .cv {
   position: relative;
-  height: 380vh; /* Smooth scroll travel distance */
+  height: 380vh;
 }
 
-/* ── Sticky viewport ── */
 .cv-sticky {
   position: sticky;
   top: 0;
@@ -20,7 +12,6 @@
   background: var(--color-bistre);
 }
 
-/* ── Fullscreen image layer ── */
 .cv-layer {
   position: absolute;
   inset: 0;
@@ -39,7 +30,6 @@
   transition: transform 0.05s linear;
 }
 
-/* ── Gradient overlays ── */
 .cv-overlay {
   position: absolute;
   left: 0;
@@ -70,7 +60,6 @@
   );
 }
 
-/* ── Hero text — center, ultra-clean ── */
 .cv-hero {
   position: absolute;
   inset: 0;
@@ -153,7 +142,6 @@
   box-shadow: 0 14px 30px rgba(0, 0, 0, 0.4);
 }
 
-/* ── Scroll hint ── */
 .cv-scroll-hint {
   position: absolute;
   bottom: 2.75rem;
@@ -204,12 +192,12 @@
   100% { top: 100%; }
 }
 
-/* ── Cinematic Captions along the scroll path ── */
 .cv-captions-container {
   position: absolute;
-  bottom: 3.5rem;
-  left: 4rem;
-  max-width: 540px;
+  bottom: 4rem;
+  left: 4.5rem;
+  width: min(640px, calc(100vw - 9rem));
+  min-height: 180px;
   z-index: 35;
   pointer-events: none;
 }
@@ -220,8 +208,10 @@
   left: 0;
   width: 100%;
   color: #ffffff;
-  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.8), 0 1px 3px rgba(0, 0, 0, 0.6);
+  text-shadow: 0 3px 24px rgba(0, 0, 0, 0.85), 0 1px 4px rgba(0, 0, 0, 0.7);
   transition: opacity 0.4s ease, transform 0.4s ease;
+  white-space: normal;
+  word-break: normal;
 }
 
 .cv-caption__header {
@@ -230,29 +220,35 @@
 
 .cv-caption__tag {
   display: inline-block;
-  font-size: 0.75rem;
-  font-weight: 600;
+  font-size: 0.8rem;
+  font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--color-flax);
+  margin-bottom: 0.4rem;
 }
 
 .cv-caption__title {
   font-family: var(--font-display);
-  font-size: clamp(1.8rem, 3.2vw, 2.5rem);
+  font-size: clamp(2rem, 3.6vw, 3rem);
   font-weight: 700;
   color: #ffffff;
   line-height: 1.15;
   letter-spacing: -0.02em;
   margin-bottom: 0.75rem;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+  white-space: normal;
+  word-break: normal;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.7);
 }
 
 .cv-caption__desc {
-  font-size: 0.95rem;
-  line-height: 1.55;
-  color: rgba(250, 248, 240, 0.85);
-  margin-bottom: 1.25rem;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: rgba(250, 248, 240, 0.95);
+  margin-bottom: 0;
+  max-width: 580px;
+  white-space: normal;
+  word-break: normal;
 }
 
 .cv-caption__meta {
@@ -297,7 +293,6 @@
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
 }
 
-/* ── Slide counter — bottom-right ── */
 .cv-counter {
   position: absolute;
   bottom: 2.75rem;
@@ -336,7 +331,6 @@
   color: rgba(250, 248, 240, 0.7);
 }
 
-/* ── Responsive ── */
 @media (max-width: 900px) {
   .cv-captions-container {
     left: 1.5rem;

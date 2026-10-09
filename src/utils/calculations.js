@@ -1,20 +1,11 @@
-/**
- * calculations.js
- * Утилиты для расчета параметров маршрута, временных интервалов и лимитов.
- */
-
 export const DEFAULT_TRANSFER_MINUTES = 20;
-export const DEFAULT_MAX_DURATION_MINUTES = 480; // 8 часов
-export const DEFAULT_MAX_BUDGET = 5000; // 5000 рублей
+export const DEFAULT_MAX_DURATION_MINUTES = 480;
+export const DEFAULT_MAX_BUDGET = 5000;
 
-/**
- * Рассчитывает сводную статистику маршрута по списку ID и настройкам.
- */
 export function calculateRouteStats(allPlaces, routePlaceIds, settings = {}) {
   const maxDurationMinutes = settings.maxDurationMinutes ?? DEFAULT_MAX_DURATION_MINUTES;
   const maxBudget = settings.maxBudget ?? DEFAULT_MAX_BUDGET;
 
-  // Маппинг ID в объекты с сохранением порядка следования
   const placesMap = new Map(allPlaces.map((p) => [p.id, p]));
   const routePlaces = routePlaceIds
     .map((id) => placesMap.get(id))
@@ -51,9 +42,6 @@ export function calculateRouteStats(allPlaces, routePlaceIds, settings = {}) {
   };
 }
 
-/**
- * Форматирует часы и минуты в формат времени "09:30"
- */
 function formatTimeHHMM(totalMinutesFromMidnight) {
   const normalized = (totalMinutesFromMidnight % (24 * 60) + (24 * 60)) % (24 * 60);
   const h = Math.floor(normalized / 60);
@@ -61,9 +49,6 @@ function formatTimeHHMM(totalMinutesFromMidnight) {
   return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
 }
 
-/**
- * Генерирует почасовое расписание дня для маршрута, начиная с указанного времени (по умолч. 09:00).
- */
 export function generateTimelineSchedule(routePlaces, startHour = 9, startMinute = 0) {
   let currentMinutes = startHour * 60 + startMinute;
   const schedule = [];
@@ -87,7 +72,6 @@ export function generateTimelineSchedule(routePlaces, startHour = 9, startMinute
 
     currentMinutes = visitEnd;
 
-    // Если есть следующий пункт, добавляем трансфер
     if (index < routePlaces.length - 1) {
       item.transferToNextMinutes = DEFAULT_TRANSFER_MINUTES;
       item.transferStartStr = formatTimeHHMM(currentMinutes);

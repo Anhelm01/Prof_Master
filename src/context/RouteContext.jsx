@@ -18,10 +18,9 @@ export function RouteProvider({ children }) {
   const [places, setPlaces] = useState(PLACES);
   const [categories] = useState(CATEGORIES);
   const [presets] = useState(ROUTE_PRESETS);
-  const [activeScreen, setActiveScreen] = useState('home'); // 'home' | 'catalog' | 'builder' | 'summary'
-  const [selectedCategory, setSelectedCategory] = useState('all'); // категория для фильтрации в каталоге
+  const [activeScreen, setActiveScreen] = useState('home');
+  const [selectedCategory, setSelectedCategory] = useState('all');
 
-  // Загрузка сохраненного маршрута из localStorage (с поддержкой строк ID и legacy объектов)
   const [routePlaceIds, setRoutePlaceIds] = useState(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY_ROUTE) || localStorage.getItem('waypoint_route');
@@ -34,13 +33,12 @@ export function RouteProvider({ children }) {
           return ids;
         }
       }
-      return ['place-01', 'place-02', 'place-03']; // Начальный стартовый маршрут
+      return ['place-01', 'place-02', 'place-03'];
     } catch {
       return ['place-01', 'place-02', 'place-03'];
     }
   });
 
-  // Заметки к точкам маршрута
   const [routeNotes, setRouteNotes] = useState(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY_NOTES);
@@ -50,7 +48,6 @@ export function RouteProvider({ children }) {
     }
   });
 
-  // Настройки лимитов времени и бюджета
   const [settings, setSettings] = useState(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY_SETTINGS);
@@ -62,18 +59,16 @@ export function RouteProvider({ children }) {
     }
   });
 
-  // Асинхронная инициализация из mockApi (серверная готовность)
   useEffect(() => {
     fetchPlaces().then((data) => {
       if (Array.isArray(data) && data.length > 0) {
         setPlaces(data);
       }
     }).catch(() => {
-      // fallback на локальные данные
+
     });
   }, []);
 
-  // Синхронизация с LocalStorage
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY_ROUTE, JSON.stringify(routePlaceIds));
@@ -99,12 +94,10 @@ export function RouteProvider({ children }) {
     }
   }, [settings]);
 
-  // Проверка присутствия места в маршруте
   const isInRoute = useCallback((placeId) => {
     return routePlaceIds.includes(placeId);
   }, [routePlaceIds]);
 
-  // Добавление в конец маршрута
   const addToRoute = useCallback((placeId) => {
     setRoutePlaceIds((prev) => {
       if (prev.includes(placeId)) return prev;
@@ -112,12 +105,10 @@ export function RouteProvider({ children }) {
     });
   }, []);
 
-  // Удаление из маршрута
   const removeFromRoute = useCallback((placeId) => {
     setRoutePlaceIds((prev) => prev.filter((id) => id !== placeId));
   }, []);
 
-  // Переключение (добавить / убрать)
   const toggleRoute = useCallback((placeId) => {
     setRoutePlaceIds((prev) => {
       if (prev.includes(placeId)) {
@@ -127,7 +118,6 @@ export function RouteProvider({ children }) {
     });
   }, []);
 
-  // Изменение порядка (move up/down)
   const reorderRoute = useCallback((fromIndex, toIndex) => {
     setRoutePlaceIds((prev) => {
       if (fromIndex < 0 || fromIndex >= prev.length || toIndex < 0 || toIndex >= prev.length) {
@@ -150,7 +140,6 @@ export function RouteProvider({ children }) {
     reorderRoute(index, index + 1);
   }, [reorderRoute]);
 
-  // Обновление заметки
   const updateNote = useCallback((placeId, note) => {
     setRouteNotes((prev) => ({
       ...prev,
@@ -158,20 +147,17 @@ export function RouteProvider({ children }) {
     }));
   }, []);
 
-  // Очистка маршрута
   const clearRoute = useCallback(() => {
     setRoutePlaceIds([]);
     setRouteNotes({});
   }, []);
 
-  // Применение пресета
   const applyPreset = useCallback((preset) => {
     if (preset && Array.isArray(preset.placeIds)) {
       setRoutePlaceIds([...preset.placeIds]);
     }
   }, []);
 
-  // Обновление настроек лимитов
   const updateSettings = useCallback((partial) => {
     setSettings((prev) => ({
       ...prev,
@@ -179,18 +165,15 @@ export function RouteProvider({ children }) {
     }));
   }, []);
 
-  // Быстрый переход в каталог с предустановленным фильтром
   const openCatalogWithCategory = useCallback((category = 'all') => {
     setSelectedCategory(category);
     setActiveScreen('catalog');
   }, []);
 
-  // Расчет суммарных метрик (мемоизировано)
   const stats = useMemo(() => {
     return calculateRouteStats(places, routePlaceIds, settings);
   }, [places, routePlaceIds, settings]);
 
-  // Расписание дня (таймлайн с 09:00)
   const timelineSchedule = useMemo(() => {
     return generateTimelineSchedule(stats.routePlaces, 9, 0);
   }, [stats.routePlaces]);

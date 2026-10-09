@@ -3,6 +3,9 @@ node_modules
 dist
 dist-ssr
 *.local
+.env
+*.sqlite*
+*.docx
 
 # Editor & OS
 .vscode
@@ -15,6 +18,9 @@ dist-ssr
 *.sw?
 
 # Documentation & temporary test scripts (as per instructions: bare code only in git)
+*.txt
+*.md
+READTODEPLOY.txt
 SPECIFICATION.txt
 ARCHITECTURE.txt
 CONVENTIONS.txt

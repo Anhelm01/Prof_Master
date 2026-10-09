@@ -39,7 +39,6 @@ export default function Catalog() {
   const [sortBy, setSortBy] = useState('default');
   const [modalPlace, setModalPlace] = useState(null);
 
-  // Категории с подсчетом количества объектов
   const categoriesWithCount = useMemo(() => {
     return categories.map((cat) => {
       const count =
@@ -50,14 +49,13 @@ export default function Catalog() {
     });
   }, [categories, places]);
 
-  // Фильтрация и сортировка объектов
   const filteredAndSortedPlaces = useMemo(() => {
     let result = places.filter((place) => {
-      // Фильтр по категории
+
       if (selectedCategory !== 'all' && place.category !== selectedCategory) {
         return false;
       }
-      // Фильтр по поисковому запросу
+
       if (searchQuery.trim()) {
         const q = searchQuery.toLowerCase().trim();
         const inTitle = place.title.toLowerCase().includes(q);
@@ -71,7 +69,6 @@ export default function Catalog() {
       return true;
     });
 
-    // Сортировка
     switch (sortBy) {
       case 'cost-asc':
         result.sort((a, b) => a.cost - b.cost);
@@ -104,7 +101,7 @@ export default function Catalog() {
   return (
     <section className="catalog-page" id="catalog">
       <div className="catalog-container">
-        {/* Шапка каталога */}
+
         <div className="catalog-header">
           <div className="catalog-header__tag">ЭКСПЕДИЦИОННЫЙ КАТАЛОГ</div>
           <h1 className="catalog-header__title">Достопримечательности и локации</h1>
@@ -114,7 +111,6 @@ export default function Catalog() {
           </p>
         </div>
 
-        {/* Панель поиска и сортировки */}
         <div className="catalog-controls">
           <div className="catalog-search">
             <Search size={18} className="catalog-search__icon" />
@@ -153,7 +149,6 @@ export default function Catalog() {
           </div>
         </div>
 
-        {/* Фильтры категорий */}
         <div className="catalog-categories">
           {categoriesWithCount.map((cat) => {
             const Icon = CATEGORY_ICONS[cat.id] || Compass;
@@ -172,7 +167,6 @@ export default function Catalog() {
           })}
         </div>
 
-        {/* Индикатор результатов */}
         <div className="catalog-meta-bar">
           <div className="catalog-meta-bar__count">
             Найдено объектов: <strong>{filteredAndSortedPlaces.length}</strong>
@@ -194,7 +188,6 @@ export default function Catalog() {
           )}
         </div>
 
-        {/* Сетка объектов */}
         {filteredAndSortedPlaces.length > 0 ? (
           <div className="catalog-grid">
             {filteredAndSortedPlaces.map((place) => (
@@ -219,7 +212,6 @@ export default function Catalog() {
         )}
       </div>
 
-      {/* Модальное окно детализации */}
       {modalPlace && (
         <PlaceDetailModal
           place={modalPlace}

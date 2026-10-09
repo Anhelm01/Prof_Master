@@ -8,14 +8,6 @@ import Catalog from './components/catalog/Catalog.jsx';
 import RouteBuilder from './components/route/RouteBuilder.jsx';
 import RouteSummary from './components/summary/RouteSummary.jsx';
 
-/**
- * AppContent — Контейнер экранов приложения «WayPoint».
- * Поддерживает бесшовное переключение между:
- * 1. Главная (кинематографичный конвейер + пресеты)
- * 2. Каталог туристических объектов (фильтрация, поиск, модалка)
- * 3. Конструктор маршрута (последовательность, порядок, таймлайн)
- * 4. Сводка и лимиты (аналитика, предупреждение о превышении, печать/экспорт)
- */
 function AppContent() {
   const { activeScreen } = useRoute();
 

@@ -1,0 +1,58 @@
+CREATE TABLE IF NOT EXISTS users (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  username VARCHAR(50) UNIQUE NOT NULL,
+  email VARCHAR(100) UNIQUE NOT NULL,
+  password_hash VARCHAR(255) NOT NULL,
+  role VARCHAR(20) NOT NULL DEFAULT 'user',
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS places (
+  id VARCHAR(50) PRIMARY KEY,
+  title VARCHAR(200) NOT NULL,
+  short_desc TEXT NOT NULL,
+  full_desc TEXT NOT NULL,
+  category VARCHAR(50) NOT NULL,
+  image_url TEXT NOT NULL,
+  conveyor_image_url TEXT,
+  duration_minutes INTEGER NOT NULL DEFAULT 60,
+  cost DECIMAL(10, 2) NOT NULL DEFAULT 0,
+  rating DECIMAL(3, 1) NOT NULL DEFAULT 4.5,
+  address VARCHAR(255),
+  lat DECIMAL(9, 6),
+  lng DECIMAL(9, 6),
+  tags TEXT,
+  opening_hours VARCHAR(100),
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS routes (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL,
+  title VARCHAR(200) NOT NULL,
+  description TEXT,
+  max_duration_minutes INTEGER NOT NULL DEFAULT 480,
+  max_budget DECIMAL(10, 2) NOT NULL DEFAULT 5000,
+  notes TEXT,
+  is_public INTEGER NOT NULL DEFAULT 0,
+  status VARCHAR(20) NOT NULL DEFAULT 'draft',
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS route_places (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  route_id INTEGER NOT NULL,
+  place_id VARCHAR(50) NOT NULL,
+  step_order INTEGER NOT NULL,
+  custom_note TEXT,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (route_id) REFERENCES routes (id) ON DELETE CASCADE,
+  FOREIGN KEY (place_id) REFERENCES places (id) ON DELETE CASCADE
+);
+
+CREATE INDEX IF NOT EXISTS idx_places_category ON places (category);
+CREATE INDEX IF NOT EXISTS idx_routes_user_id ON routes (user_id);
+CREATE INDEX IF NOT EXISTS idx_route_places_route ON route_places (route_id, step_order);
